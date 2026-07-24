@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 499b6a89896c40d4a876fe684c972861, type: 3}
+  m_Name: GridData
+  m_EditorClassIdentifier: Assembly-CSharp::CyberEvolution.Data.Grid.GridData
+  TilePrefab: {fileID: 4804516519792423654, guid: 0cb3c98a0ce5202459380ceb772b56a9, type: 3}
+  MobPrefab: {fileID: 0}
+  FoodPrefab: {fileID: 0}

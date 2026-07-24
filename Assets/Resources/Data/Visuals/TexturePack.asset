@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f511850dc64747fdb5b13bb5b9ec373c, type: 3}
+  m_Name: TexturePack
+  m_EditorClassIdentifier: Assembly-CSharp::CyberEvolution.Data.Visuals.TexturePack
+  TileSprite: {fileID: 21300000, guid: 20fc3e32a4b0fcd46996345958f5fd98, type: 3}
+  WallSprite: {fileID: 21300000, guid: 1d7368b0318ebdd40aaaea0d0e73884d, type: 3}
+  MobSprite: {fileID: 21300000, guid: 97da258baf0437f4fb19ed41e42f51bf, type: 3}
+  FoodSprite: {fileID: 21300000, guid: 86960f3ae2376aa458a2e200d8c55494, type: 3}
+  OutlineSprite: {fileID: 21300000, guid: 51443b9213aa6a84c9711c7ce4a6d9dc, type: 3}
