@@ -7,7 +7,10 @@ namespace CyberEvolution.Grid
         public int X { get; private set; }
         public int Y { get; private set; }
         
-        public bool IsOccupied => false;
+        //can anything be spawned here
+        public bool IsEmpty => _isWall;
+        //can mob walk into here
+        public bool IsWalkable => !_isWall;
 
         [SerializeField] private SpriteRenderer _spriteRenderer;
         
