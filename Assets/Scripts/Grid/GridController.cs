@@ -42,7 +42,7 @@ namespace CyberEvolution.Grid
                     }
                     
                     _grid[i, j] = cell;
-                    cell.Initialize(i, j, _texturePack.TileSprite, _texturePack.WallSprite, isWall);
+                    cell.Initialize(new Vector2Int(i, j), _texturePack.TileSprite, _texturePack.WallSprite, isWall);
                 }
             }
         }
@@ -66,9 +66,9 @@ namespace CyberEvolution.Grid
             return emptyCells[Random.Range(0, emptyCells.Count)];
         }
 
-        public Cell GetCell(int x, int y)
+        public Cell GetCell(Vector2Int position)
         {
-            return _grid[x, y];
+            return _grid[position.x, position.y];
         }
     }
 }

@@ -13,6 +13,8 @@ namespace CyberEvolution.Pooling
 
         private Dictionary<Type, Queue<IPoolable>> _activePools;
 
+        private bool _useDynamicPools;
+
         [CanBeNull]
         public T Get<T>() where T : class, IPoolable 
         {
@@ -43,6 +45,26 @@ namespace CyberEvolution.Pooling
             }
         }
 
+        public void CreatePools(int dynamicPoolSize = -1)
+        {
+            _activePools = new Dictionary<Type, Queue<IPoolable>>();
+            foreach (var pool in _pools)
+            {
+                for (int i = 0; i < (_useDynamicPools && dynamicPoolSize > 0 ? dynamicPoolSize : pool.PoolSize); i++)
+                {
+                    IPoolable poolable = Instantiate(pool.Prefab, pool.Container).GetComponent<IPoolable>();
+                
+                    if (poolable == null)
+                    {
+                        Debug.LogError($"[CreatePools] Prefab of type {pool.Prefab.GetType()} does not implement the IPoolable interface thus current pool is being skipped!");
+                        continue;
+                    }
+                
+                    AddToPool(poolable);
+                }
+            }
+        }
+
         private void Awake()
         {
             if (Instance != null)
@@ -53,8 +75,6 @@ namespace CyberEvolution.Pooling
 
             Instance = this;
             DontDestroyOnLoad(gameObject);
-            
-            CreatePools();
         }
 
         private void ExtendPoolIfNeeded<T>(Queue<IPoolable> poolables) where T : class, IPoolable
@@ -91,25 +111,7 @@ namespace CyberEvolution.Pooling
 
             return null;
         }
-        
 
-        private void CreatePools()
-        {
-            _activePools = new Dictionary<Type, Queue<IPoolable>>();
-            foreach (var pool in _pools)
-            {
-                IPoolable poolable = Instantiate(pool.Prefab, pool.Container).GetComponent<IPoolable>();
-                
-                if (poolable == null)
-                {
-                    Debug.LogError($"[CreatePools] Prefab of type {pool.Prefab.GetType()} does not implement the IPoolable interface thus current pool is being skipped!");
-                    continue;
-                }
-                
-                AddToPool(poolable);
-            }
-        }
-        
 
         private void AddToPool(IPoolable poolable)
         {

@@ -1,8 +1,11 @@
-﻿namespace CyberEvolution.Pooling
+﻿using System;
+
+namespace CyberEvolution.Pooling
 {
     public interface IPoolable
     {
-        BasicPooler Pooler { get; set; }
+        event Action OnReturned;
+        BasicPooler Pooler { get; }
 
         void Initialize(BasicPooler pooler);
 

@@ -1,16 +1,17 @@
-﻿using UnityEngine;
+﻿using CyberEvolution.Entities;
+using UnityEngine;
 
 namespace CyberEvolution.Grid
 {
     public class Cell : MonoBehaviour
     {
-        public int X { get; private set; }
-        public int Y { get; private set; }
+        public Vector2Int GridPosition { get; private set; }
         
+        public Mob Mob { get; private set; }
         //can anything be spawned here
-        public bool IsEmpty => _isWall;
+        public bool IsEmpty => !_isWall;
         //can mob walk into here
-        public bool IsWalkable => !_isWall;
+        public bool IsWalkable => !_isWall && Mob == null;
 
         [SerializeField] private SpriteRenderer _spriteRenderer;
         
@@ -19,14 +20,27 @@ namespace CyberEvolution.Grid
         private bool _isWall;
 
 
-        public void Initialize(int x, int y, Sprite tileSprite, Sprite wallSprite, bool initializeAsWall = false)
+        public void Initialize(Vector2Int position, Sprite tileSprite, Sprite wallSprite, bool initializeAsWall = false)
         {
-            X = x;
-            Y = y;
+            GridPosition = position;
             _wallSprite = wallSprite;
             _tileSprite = tileSprite;
             _isWall = initializeAsWall;
             _spriteRenderer.sprite = _isWall ? _wallSprite : _tileSprite;
+        }
+
+        public void SetMob(Mob mob)
+        {
+            if (mob == null) return;
+            
+            Mob = mob;
+            Mob.OnReturned += RemoveMob;
+        }
+
+        public void RemoveMob()
+        {
+            Mob.OnReturned -= RemoveMob;
+            Mob = null;
         }
     }
 }

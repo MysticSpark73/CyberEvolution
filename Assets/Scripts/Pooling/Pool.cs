@@ -9,5 +9,6 @@ namespace CyberEvolution.Pooling
         public GameObject Prefab;
         public int PoolSize;
         public Transform Container;
+        public bool UseDynamicPoolSize;
     }
 }
