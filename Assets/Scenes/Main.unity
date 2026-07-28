@@ -180,7 +180,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CyberEvolution.Simulation.SimulationController
   _gridContainer: {fileID: 918224744}
-  _pooler: {fileID: 0}
+  _pooler: {fileID: 1210234927}
 --- !u!4 &1182538116
 Transform:
   m_ObjectHideFlags: 0
@@ -227,7 +227,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CyberEvolution.Pooling.BasicPooler
   _pools:
   - Prefab: {fileID: 622369624764202458, guid: 752b496dff349f1409392f71d7f4eb45, type: 3}
-    PoolSize: 0
+    PoolSize: 10
     Container: {fileID: 1696305841}
     UseDynamicPoolSize: 1
 --- !u!4 &1210234928

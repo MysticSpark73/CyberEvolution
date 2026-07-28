@@ -2,24 +2,25 @@
 using CyberEvolution.Entities;
 using CyberEvolution.Grid;
 using CyberEvolution.Pooling;
+using CyberEvolution.Simulation.Genomes;
 using UnityEngine;
 
 namespace CyberEvolution.Simulation
 {
     public class MobsController
     {
-        private BasicPooler _pooler;
-        private GridController _gridController;
+        private readonly BasicPooler _pooler;
+        private readonly GridController _gridController;
+        private readonly GenomeCache _genomeCache;
         
         private List<Mob> _mobs = new();
-        private float _updateTime;
-        private float _timeFromLastUpdate;
-        private bool _isPaused;
 
-        public MobsController(BasicPooler pooler, GridController gridController)
+
+        public MobsController(BasicPooler pooler, GridController gridController, GenomeCache genomeCache)
         {
             _pooler = pooler;
             _gridController = gridController;
+            _genomeCache = genomeCache;
         }
 
         public void SpawnMob(Vector2Int position)
@@ -38,25 +39,9 @@ namespace CyberEvolution.Simulation
                 return;
             }
             
-            mob.SetupOnSpawned(cell.GridPosition, 0, 50);
+            mob.Initialize(cell.GridPosition, 0, 50, this, _genomeCache);
             cell.SetMob(mob);
             _mobs.Add(mob);
-        }
-
-        public void Update(float deltaTime)
-        {
-            if (_isPaused) return;
-            
-            _timeFromLastUpdate += deltaTime;
-
-            if (_timeFromLastUpdate >= _updateTime)
-            {
-                _timeFromLastUpdate = 0;
-                foreach (var mob in _mobs)
-                {
-                    //todo: mob.Update()
-                }
-            }
         }
     }
 }

@@ -47,6 +47,19 @@ namespace CyberEvolution.Grid
             }
         }
 
+        public void UpdateCells()
+        {
+            for (int i = 0; i < _gridWidth; i++)
+            {
+                for (int j = 0; j < _gridHeight; j++)
+                {
+                    if (_grid[i, j].IsEmpty) continue;
+                    
+                    _grid[i, j].UpdateCell();
+                }
+            }
+        }
+
         public Cell GetRandomEmptyCell()
         {
             List<Cell> emptyCells = new();

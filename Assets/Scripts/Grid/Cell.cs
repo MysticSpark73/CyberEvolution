@@ -29,6 +29,13 @@ namespace CyberEvolution.Grid
             _spriteRenderer.sprite = _isWall ? _wallSprite : _tileSprite;
         }
 
+        public void UpdateCell()
+        {
+            if (Mob == null) return;
+            
+            Mob.ExecuteCommand(GridPosition);
+        }
+
         public void SetMob(Mob mob)
         {
             if (mob == null) return;

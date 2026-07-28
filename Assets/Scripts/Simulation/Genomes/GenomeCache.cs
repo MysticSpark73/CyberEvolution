@@ -1,14 +1,19 @@
 ﻿using System.Collections.Generic;
+using CyberEvolution.Commands;
 
 namespace CyberEvolution.Simulation.Genomes
 {
     public class GenomeCache
     {
+        private CommandsFactory _commandsFactory;
+        
         private Dictionary<int, GenomeBase> Genomes = new ();
         private int currentGenerationId;
 
-        public GenomeCache()
+        public GenomeCache(CommandsFactory commandsFactory)
         {
+            _commandsFactory = commandsFactory;
+            
             CreateFirstGenome();
         }
 

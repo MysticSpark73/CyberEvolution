@@ -115,7 +115,7 @@ namespace CyberEvolution.Pooling
 
         private void AddToPool(IPoolable poolable)
         {
-            poolable.Initialize(this);
+            poolable.InitializePoolable(this);
             
             if (!_activePools.ContainsKey(poolable.GetType()))
             {

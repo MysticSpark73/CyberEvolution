@@ -7,7 +7,7 @@ namespace CyberEvolution.Pooling
         event Action OnReturned;
         BasicPooler Pooler { get; }
 
-        void Initialize(BasicPooler pooler);
+        void InitializePoolable(BasicPooler pooler);
 
         void OnSpawn();
 
