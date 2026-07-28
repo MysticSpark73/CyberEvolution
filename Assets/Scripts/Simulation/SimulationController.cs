@@ -11,12 +11,12 @@ namespace CyberEvolution.Simulation
 {
     public class SimulationController : MonoBehaviour
     {
-        private const string TextuePackPath = "Data/Visuals/TexturePack";
+        private const string TexturePackPath = "Data/Visuals/TexturePack";
         private const string GridDataPath = "Data/Grid/GridData";
         private const string CommandsDataPath = "Data/Commands/CommandsData";
         
         private const int _testGridWidth = 20;
-        private const int _testGridHeigth = 20;
+        private const int _testGridHeight = 20;
         
         [SerializeField] private Transform _gridContainer;
         [SerializeField] private BasicPooler _pooler;
@@ -57,7 +57,7 @@ namespace CyberEvolution.Simulation
 
         private void LoadData()
         {
-            _texturePack = Resources.Load<TexturePack>(TextuePackPath);
+            _texturePack = Resources.Load<TexturePack>(TexturePackPath);
             _gridData = Resources.Load<GridData>(GridDataPath);
             _commandsData = Resources.Load<CommandsData>(CommandsDataPath);
         }
@@ -67,9 +67,9 @@ namespace CyberEvolution.Simulation
             _gridController = new GridController(_gridContainer, _gridData, _texturePack);
             _commandsFactory = new CommandsFactory(_commandsData, null);
             _genomeCache = new GenomeCache(_commandsFactory);
-            _pooler.CreatePools(_testGridWidth * _testGridHeigth);
+            _pooler.CreatePools(_testGridWidth * _testGridHeight);
             _mobsController = new MobsController(_pooler, _gridController, _genomeCache);
-            _gridController.CreateGrid(_testGridWidth, _testGridHeigth);
+            _gridController.CreateGrid(_testGridWidth, _testGridHeight);
             //todo: Remember to set seed
             
             _isInitialized = true;
