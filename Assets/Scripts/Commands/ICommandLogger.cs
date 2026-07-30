@@ -2,6 +2,6 @@
 {
     public interface ICommandLogger
     {
-        void Log(string message);
+        void Log(CommandBase command, string message = "");
     }
 }

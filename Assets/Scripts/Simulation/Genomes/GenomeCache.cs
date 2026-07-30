@@ -5,21 +5,22 @@ namespace CyberEvolution.Simulation.Genomes
 {
     public class GenomeCache
     {
-        private CommandsFactory _commandsFactory;
-        
         private Dictionary<int, GenomeBase> Genomes = new ();
         private int currentGenerationId;
 
-        public GenomeCache(CommandsFactory commandsFactory)
+        public GenomeCache()
         {
-            _commandsFactory = commandsFactory;
-            
             CreateFirstGenome();
         }
 
-        public void GetNextCommand(int id, ref int ptr)
+        public CommandType GetNextCommand(int id, ref int ptr)
         {
-            //todo: return command
+            if (Genomes.TryGetValue(id, out var genome))
+            {
+                return genome.GetNextCommand(ref ptr);
+            }
+
+            return CommandType.UndefinedCommand;
         }
 
         public void MutateGenome(int id)

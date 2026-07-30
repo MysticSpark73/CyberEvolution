@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using CyberEvolution.Commands;
 using CyberEvolution.Entities;
 using CyberEvolution.Grid;
 using CyberEvolution.Pooling;
@@ -12,18 +13,19 @@ namespace CyberEvolution.Simulation
         private readonly BasicPooler _pooler;
         private readonly GridController _gridController;
         private readonly GenomeCache _genomeCache;
+        private readonly CommandsFactory _commandsFactory;
         
         private List<Mob> _mobs = new();
 
-
-        public MobsController(BasicPooler pooler, GridController gridController, GenomeCache genomeCache)
+        public MobsController(BasicPooler pooler, GridController gridController, GenomeCache genomeCache, CommandsFactory commandsFactory)
         {
             _pooler = pooler;
             _gridController = gridController;
             _genomeCache = genomeCache;
+            _commandsFactory = commandsFactory;
         }
 
-        public void SpawnMob(Vector2Int position)
+        public void SpawnMob(Vector2Int position, int generationId, int energy, int energyToReproduce)
         {
             Cell cell = _gridController.GetCell(position);
             if (cell.Mob != null)
@@ -39,7 +41,8 @@ namespace CyberEvolution.Simulation
                 return;
             }
             
-            mob.Initialize(cell.GridPosition, 0, 50, this, _genomeCache);
+            mob.InitializeDependencies(this, _genomeCache, _commandsFactory, _gridController);
+            mob.SetupOnGrid(cell.GridPosition, generationId, energy, energyToReproduce);
             cell.SetMob(mob);
             _mobs.Add(mob);
         }

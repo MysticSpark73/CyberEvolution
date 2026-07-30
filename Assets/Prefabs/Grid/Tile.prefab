@@ -106,3 +106,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CyberEvolution.Grid.Cell
   _spriteRenderer: {fileID: 7948558637089604314}
+  test: 4
+  id: asdasd

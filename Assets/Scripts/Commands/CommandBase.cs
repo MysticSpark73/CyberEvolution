@@ -4,19 +4,25 @@ namespace CyberEvolution.Commands
 {
     public abstract class CommandBase : ICommand
     {
-        protected ICommandLogger _logger;
-        protected float _energyCost;
+        private readonly ICommandLogger _logger;
+        protected readonly ICommandListener _listener;
+        protected readonly float _energyCost;
 
-        public CommandBase(ICommandLogger logger, float energyCost)
+        protected CommandBase(ICommandLogger logger, ICommandListener listener, float energyCost)
         {
             _logger = logger;
+            _listener = listener;
             _energyCost = energyCost;
         }
 
-        public virtual void Execute(Action<float> callback = null)
+        public virtual void Execute()
         {
-            _logger.Log(GetLogMessage());
-            callback?.Invoke(_energyCost);
+            _logger.Log(this, GetLogMessage());
+        }
+
+        public virtual void Undo()
+        {
+            throw new NotImplementedException();
         }
 
         protected virtual string GetLogMessage()

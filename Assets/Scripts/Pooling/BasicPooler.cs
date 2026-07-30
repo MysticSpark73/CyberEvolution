@@ -123,6 +123,5 @@ namespace CyberEvolution.Pooling
             } 
             _activePools[poolable.GetType()].Enqueue(poolable);
         }
-        
     }
 }

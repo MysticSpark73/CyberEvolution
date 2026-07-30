@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using CyberEvolution.Data.Grid;
 using CyberEvolution.Data.Visuals;
 using UnityEngine;
+using UnityEngine.U2D;
 
 namespace CyberEvolution.Grid
 {
@@ -15,7 +16,7 @@ namespace CyberEvolution.Grid
         
         private int _gridWidth;
         private int _gridHeight;
-
+        
         public GridController(Transform gridContainer, GridData gridData, TexturePack texturePack)
         {
             _gridContainer = gridContainer;
@@ -36,10 +37,7 @@ namespace CyberEvolution.Grid
                     bool isWall = i == 0 || i == width - 1 || j == 0 || j == height - 1;
                     GameObject cellObject = Object.Instantiate(_gridData.TilePrefab, new Vector3(i, j, 0), Quaternion.identity, _gridContainer);
                     Cell cell = cellObject.GetComponent<Cell>();
-                    if (cell == null)
-                    {
-                        continue;
-                    }
+                    if (cell == null) continue;
                     
                     _grid[i, j] = cell;
                     cell.Initialize(new Vector2Int(i, j), _texturePack.TileSprite, _texturePack.WallSprite, isWall);
@@ -81,6 +79,7 @@ namespace CyberEvolution.Grid
 
         public Cell GetCell(Vector2Int position)
         {
+            if (position.x < 0 || position.x >= _gridWidth || position.y < 0 || position.y >= _gridHeight) return null;
             return _grid[position.x, position.y];
         }
     }

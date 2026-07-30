@@ -1,4 +1,6 @@
-﻿namespace CyberEvolution.Simulation.Genomes
+﻿using CyberEvolution.Commands;
+
+namespace CyberEvolution.Simulation.Genomes
 {
     public class GenomeBase : IGenome
     {
@@ -12,11 +14,11 @@
             _commands = commands;
         }
 
-        public virtual void GetNextCommand(ref int ptr)
+        public virtual CommandType GetNextCommand(ref int ptr)
         {
             int commandValue = _commands[ptr];
             ptr = ((ptr + 1) % _commands.Length + _commands.Length) % _commands.Length;
-            //todo: create and return command associated with given number
+            return (CommandType) commandValue;
         }
 
         public GenomeBase Mutate(int id)

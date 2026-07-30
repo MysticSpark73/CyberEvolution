@@ -29,6 +29,7 @@ namespace CyberEvolution.Simulation
         private MobsController _mobsController;
         private GenomeCache _genomeCache;
         private CommandsFactory _commandsFactory;
+        private ICommandLogger _commandLogger;
         
         private float _updateTime;
         private float _timeSinceLastUpdate;
@@ -64,11 +65,12 @@ namespace CyberEvolution.Simulation
 
         private void Setup()
         {
+            _commandLogger = new DebugLogger();
+            _genomeCache = new GenomeCache();
             _gridController = new GridController(_gridContainer, _gridData, _texturePack);
-            _commandsFactory = new CommandsFactory(_commandsData, null);
-            _genomeCache = new GenomeCache(_commandsFactory);
+            _commandsFactory = new CommandsFactory(_commandsData, _commandLogger);
             _pooler.CreatePools(_testGridWidth * _testGridHeight);
-            _mobsController = new MobsController(_pooler, _gridController, _genomeCache);
+            _mobsController = new MobsController(_pooler, _gridController, _genomeCache, _commandsFactory);
             _gridController.CreateGrid(_testGridWidth, _testGridHeight);
             //todo: Remember to set seed
             

@@ -1,8 +1,10 @@
-﻿namespace CyberEvolution.Simulation.Genomes
+﻿using CyberEvolution.Commands;
+
+namespace CyberEvolution.Simulation.Genomes
 {
     public interface IGenome
     {
-        void GetNextCommand(ref int ptr);
+        CommandType GetNextCommand(ref int ptr);
         GenomeBase Mutate(int id);
     }
 }
