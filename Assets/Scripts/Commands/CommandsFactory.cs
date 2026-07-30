@@ -27,7 +27,7 @@ namespace CyberEvolution.Commands
                 case CommandType.TurnCCW45:
                     return new TurnCommand(_logger, listener, commandData.EnergyCost, -45);
                 case CommandType.MoveForward:
-                    return new DoNothingCommand(_logger, listener, commandData.EnergyCost);
+                    return new MoveForwardCommand(_logger, listener, commandData.EnergyCost);
                 case CommandType.ConsumePlant:
                     return new ConsumeCommand(_logger, listener, commandData.EnergyCost, FoodType.Plant);
                 case CommandType.ConsumeMeat:
