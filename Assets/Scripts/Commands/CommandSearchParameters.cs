@@ -2,7 +2,6 @@
 {
     public struct CommandSearchParameters
     {
-        public bool allowDiagonals;
         public CommandType[] _excludeCommands;
     }
 }

@@ -1,15 +1,19 @@
 ﻿using System.Collections.Generic;
 using CyberEvolution.Commands;
+using Random = UnityEngine.Random;
 
 namespace CyberEvolution.Simulation.Genomes
 {
     public class GenomeCache
     {
-        private Dictionary<int, GenomeBase> Genomes = new ();
-        private int currentGenerationId;
+        public int CurrentGenerationId { get; private set; }
 
-        public GenomeCache()
+        private Dictionary<int, GenomeBase> Genomes = new ();
+        private readonly float _mutationPercent;
+
+        public GenomeCache(float mutationPercent)
         {
+            _mutationPercent = mutationPercent;
             CreateFirstGenome();
         }
 
@@ -23,17 +27,37 @@ namespace CyberEvolution.Simulation.Genomes
             return CommandType.UndefinedCommand;
         }
 
-        public void MutateGenome(int id)
+        public bool TryMutateGenome(int id, out int mutatedId)
         {
-            //todo: get genome by id
-            //todo: get mutated genome from it's ancestor
-            //todo: increase current id
-            //todo: add genome with new id to cache
+            mutatedId = id;
+            if (Random.Range(0, 100) <= 1 - _mutationPercent)
+            {
+                GenomeBase genome = Genomes[id];
+                CurrentGenerationId++;
+                mutatedId = CurrentGenerationId;
+                Genomes.Add(CurrentGenerationId, genome.Mutate(CurrentGenerationId));
+                return true;
+            }
+
+            return false;
         }
 
         private void CreateFirstGenome()
         {
-            //todo: create first genome based on input parameters: random/ from data
+            CurrentGenerationId = 0;
+            GenomeBase genomeBase = new GenomeBase(CurrentGenerationId, CreateRandomGenome(64));
+            Genomes.Add(CurrentGenerationId, genomeBase);
+        }
+
+        private int[] CreateRandomGenome(int length)
+        {
+            int[] genome =  new int[length];
+            for (int i = 0; i < length; i++)
+            {
+                genome[i] = (int) CommandTypeExtension.GetRandomCommand();
+            }
+
+            return genome;
         }
     }
 }

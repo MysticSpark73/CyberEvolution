@@ -15,3 +15,17 @@ MonoBehaviour:
   data:
   - Type: 0
     EnergyCost: 1
+  - Type: 1
+    EnergyCost: 2
+  - Type: 2
+    EnergyCost: 2
+  - Type: 3
+    EnergyCost: 3
+  - Type: 4
+    EnergyCost: 1
+  - Type: 5
+    EnergyCost: 1
+  - Type: 6
+    EnergyCost: 5
+  - Type: 7
+    EnergyCost: 5

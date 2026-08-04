@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using CyberEvolution.Data.Grid;
 using CyberEvolution.Data.Visuals;
 using UnityEngine;
-using UnityEngine.U2D;
 
 namespace CyberEvolution.Grid
 {
@@ -45,19 +44,6 @@ namespace CyberEvolution.Grid
             }
         }
 
-        public void UpdateCells()
-        {
-            for (int i = 0; i < _gridWidth; i++)
-            {
-                for (int j = 0; j < _gridHeight; j++)
-                {
-                    if (_grid[i, j].IsEmpty) continue;
-                    
-                    _grid[i, j].UpdateCell();
-                }
-            }
-        }
-
         public Cell GetRandomEmptyCell()
         {
             List<Cell> emptyCells = new();
@@ -74,6 +60,44 @@ namespace CyberEvolution.Grid
 
             if (emptyCells.Count == 0) return null;
             
+            return emptyCells[Random.Range(0, emptyCells.Count)];
+        }
+
+        public Cell GetFirstEmptyCellNearby(Vector2Int position)
+        {
+            int x, y;
+            for (int i = -1; i < 1; i++)
+            {
+                for (int j = -1; j < 1; j++)
+                {
+                    if (i == 0 && j == 0) continue;
+                    x = position.x + i;
+                    y = position.y + j;
+                    if (x <0 || x > _gridWidth || y < 0 || y > _gridHeight) continue;
+                    if (_grid[x, y].IsEmpty) return _grid[x, y];
+                }
+            }
+
+            return null;
+        }
+        
+        public Cell GetRandomEmptyCellNearby(Vector2Int position)
+        {
+            List<Cell> emptyCells = new();
+            int x, y;
+            for (int i = -1; i < 1; i++)
+            {
+                for (int j = -1; j < 1; j++)
+                {
+                    if (i == 0 && j == 0) continue;
+                    x = position.x + i;
+                    y = position.y + j;
+                    if (x < 0 || x > _gridWidth || y < 0 || y > _gridHeight) continue;
+                    if (_grid[x, y].IsEmpty) emptyCells.Add(_grid[x, y]);
+                }
+            }
+
+            if (emptyCells.Count == 0) return null;
             return emptyCells[Random.Range(0, emptyCells.Count)];
         }
 

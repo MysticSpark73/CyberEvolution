@@ -9,7 +9,7 @@ namespace CyberEvolution.Grid
         
         public Mob Mob { get; private set; }
         //can anything be spawned here
-        public bool IsEmpty => !_isWall;
+        public bool IsEmpty => !_isWall && Mob == null;
         //can mob walk into here
         public bool IsWalkable => !_isWall && Mob == null;
 
@@ -33,20 +33,12 @@ namespace CyberEvolution.Grid
             _spriteRenderer.sprite = _isWall ? _wallSprite : _tileSprite;
         }
 
-        public void UpdateCell()
-        {
-            if (Mob == null) return;
-            
-            Mob.ExecuteCommand(GridPosition);
-        }
-
         public void SetMob(Mob mob)
         {
             if (mob == null) return;
             
             Mob = mob;
             Mob.OnReturned += RemoveMob;
-            //todo: prly set mob's position from here too
         }
 
         public void RemoveMob()

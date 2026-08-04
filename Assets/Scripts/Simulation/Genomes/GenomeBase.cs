@@ -1,4 +1,5 @@
 ﻿using CyberEvolution.Commands;
+using UnityEngine;
 
 namespace CyberEvolution.Simulation.Genomes
 {
@@ -25,7 +26,8 @@ namespace CyberEvolution.Simulation.Genomes
         {
             int[] newGenome = new int[_commands.Length];
             _commands.CopyTo(newGenome, 0);
-            //todo: mutate random command
+            int replaceIndex = Random.Range(0, _commands.Length);
+            _commands[replaceIndex] = (int) CommandTypeExtension.GetRandomCommand((CommandType) _commands[replaceIndex]);
             return new GenomeBase(id, newGenome);
         }
     }

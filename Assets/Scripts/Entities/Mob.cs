@@ -17,8 +17,9 @@ namespace CyberEvolution.Entities
         
         private int _generationId;
         private int _currentCommandPointer;
-        private float _energy;
+        private float _attackDamage;
         private float _energyToReproduce;
+        private float _energy;
         private bool _areDependenciesInitialized;
         private CommandsFactory _commandsFactory;
         private GridController _gridController;
@@ -40,6 +41,7 @@ namespace CyberEvolution.Entities
         public void OnReturn()
         {
             gameObject.SetActive(false);
+            _mobsController.RemoveMob(this);
             OnReturned?.Invoke();
         }
 
@@ -62,7 +64,7 @@ namespace CyberEvolution.Entities
             }
             
             _gridController.GetCell(_gridPosition)?.RemoveMob();
-            _gridPosition = targetPosition;
+            SetPosition(targetPosition);
             targetCell.SetMob(this);
             
         }
@@ -72,7 +74,7 @@ namespace CyberEvolution.Entities
         public void Turn(int degrees, float energyCost)
         {
             DepleteEnergy(energyCost);
-            transform.Rotate(Vector3.up * degrees);
+            transform.Rotate(Vector3.forward * degrees);
         }
 
         public void DoNothing(float energyCost) => DepleteEnergy(energyCost);
@@ -106,9 +108,8 @@ namespace CyberEvolution.Entities
                 Debug.Log($"[Mob][Attack] cell has nothing to attack!");
                 return;
             }
-            
-            target.TakeDamage(25);
-            throw new NotImplementedException();
+
+            target.TakeDamage(_attackDamage);
         }
 
         public void AttackForward(bool isAggressiveTowardsFriendly, float energyCost) =>
@@ -128,18 +129,18 @@ namespace CyberEvolution.Entities
             _areDependenciesInitialized = true;
         }
 
-        public void SetupOnGrid(Vector2Int position, int generationId, int energy, float energyToReproduce)
+        public void SetupOnGrid(Vector2Int position, int generationId, float energy, float energyToReproduce, float attackDamage)
         {
             _generationId = generationId;
             _currentCommandPointer = 0;
             _energy = energy;
             _energyToReproduce = energyToReproduce;
-            _gridPosition = position;
+            _attackDamage = attackDamage;
             
-            transform.position = new Vector3(_gridPosition.x, _gridPosition.y, 0);
+            SetPosition(position);
         }
 
-        public void ExecuteCommand(Vector2Int gridPosition)
+        public void ExecuteCommand()
         {
             CommandType commandType = _genomeCache.GetNextCommand(_generationId, ref _currentCommandPointer);
             var command = _commandsFactory.Create(commandType, this);
@@ -150,10 +151,26 @@ namespace CyberEvolution.Entities
         private void TryReproduce()
         {
             if (_energy < _energyToReproduce) return;
-         
-            //todo: _gridController.TryFindEmptyNeighbourCell(out Cell cell)
-            //todo: _genomeCache.TryMutate();
-            //todo: _mobsController.SpawnMob(Cell.GridPosition, generationId, _energy/2, _energyToReproduce);
+
+            Cell targetCell = _gridController.GetFirstEmptyCellNearby(_gridPosition);
+
+            if (targetCell == null)
+            {
+                Debug.LogError($"[Mob][TryReproduce] can't reproduce! No emptyCells nearby!", this);
+                return;
+            }
+            
+            DepleteEnergy(_energyToReproduce);
+
+            _genomeCache.TryMutateGenome(_generationId, out int mutatedId);
+            
+            _mobsController.SpawnMob(targetCell.GridPosition, mutatedId, _energyToReproduce);
+        }
+
+        private void SetPosition(Vector2Int position)
+        {
+            _gridPosition = position;
+            transform. position = new Vector3(_gridPosition.x, _gridPosition.y, 0);
         }
 
         private void DepleteEnergy(float energyCost)
@@ -162,7 +179,7 @@ namespace CyberEvolution.Entities
             if (_energy <= 0) Die();
         }
 
-        private Vector2Int GetForwardDirection() => Vector2Int.RoundToInt(new Vector2(transform.forward.x, transform.forward.y));
+        private Vector2Int GetForwardDirection() => Vector2Int.RoundToInt(new Vector2(transform.up.x, transform.up.y));
 
         private void Die()
         {

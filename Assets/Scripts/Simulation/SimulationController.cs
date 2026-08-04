@@ -6,6 +6,7 @@ using CyberEvolution.Grid;
 using CyberEvolution.Pooling;
 using CyberEvolution.Simulation.Genomes;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace CyberEvolution.Simulation
 {
@@ -31,10 +32,15 @@ namespace CyberEvolution.Simulation
         private CommandsFactory _commandsFactory;
         private ICommandLogger _commandLogger;
         
-        private float _updateTime;
+        private float _updateTime = .5f;
         private float _timeSinceLastUpdate;
         private bool _isPaused;
         private bool _isInitialized;
+        private readonly float _mutationPercent = .2f;
+        private int _seed;
+        private readonly float _energyToReproduce = 50;
+        private readonly float _mobAttackDamage = 50;
+        private readonly int _initialPopulation = 5;
 
         private void Start()
         {
@@ -52,7 +58,7 @@ namespace CyberEvolution.Simulation
             if (_timeSinceLastUpdate >= _updateTime)
             {
                 _timeSinceLastUpdate = 0;
-                _gridController.UpdateCells();
+                _mobsController.Update();
             }
         }
 
@@ -65,16 +71,42 @@ namespace CyberEvolution.Simulation
 
         private void Setup()
         {
+            SetupSeed();
+            CreateSystems();
+            SetupBoard();
+
+            _isInitialized = true;
+        }
+
+        private void CreateSystems()
+        {
             _commandLogger = new DebugLogger();
-            _genomeCache = new GenomeCache();
+            _genomeCache = new GenomeCache(_mutationPercent);
             _gridController = new GridController(_gridContainer, _gridData, _texturePack);
             _commandsFactory = new CommandsFactory(_commandsData, _commandLogger);
+            _mobsController = new MobsController(_pooler, _gridController, _genomeCache, _commandsFactory, _energyToReproduce, _mobAttackDamage);
+        }
+
+        private void SetupBoard()
+        {
             _pooler.CreatePools(_testGridWidth * _testGridHeight);
-            _mobsController = new MobsController(_pooler, _gridController, _genomeCache, _commandsFactory);
             _gridController.CreateGrid(_testGridWidth, _testGridHeight);
-            //todo: Remember to set seed
-            
-            _isInitialized = true;
+            SpawnMobs();
+        }
+
+        private void SpawnMobs()
+        {
+            for (int i = 0; i < _initialPopulation; i++)
+            {
+                _mobsController.SpawnMob(_gridController.GetRandomEmptyCell().GridPosition, _genomeCache.CurrentGenerationId, _energyToReproduce * .5f);
+            }
+        }
+
+        private void SetupSeed()
+        {
+            //todo: check data for seed options (random/custom)
+            _seed = Application.productName.GetHashCode();
+            Random.InitState(_seed);
         }
     }
 }
