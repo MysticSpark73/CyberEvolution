@@ -13,16 +13,12 @@ namespace CyberEvolution.Grid
         //can mob walk into here
         public bool IsWalkable => !_isWall && Mob == null;
 
-        [Header("Grid Size")]
         [SerializeField] private SpriteRenderer _spriteRenderer;
-        [SerializeField] [Range(0, 10)] private int test;
-        public string id;
-        [SerializeField] private Sprite _sprite;
-        [SerializeField] private Sprite sprite_2;
         
         private Sprite _tileSprite;
         private Sprite _wallSprite;
         private bool _isWall;
+
 
         public void Initialize(Vector2Int position, Sprite tileSprite, Sprite wallSprite, bool initializeAsWall = false)
         {
