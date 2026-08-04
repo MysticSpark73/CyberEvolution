@@ -4,12 +4,17 @@ using CyberEvolution.Grid;
 using CyberEvolution.Pooling;
 using CyberEvolution.Simulation;
 using CyberEvolution.Simulation.Genomes;
+using TMPro;
 using UnityEngine;
 
 namespace CyberEvolution.Entities
 {
     public class Mob : MonoBehaviour, IPoolable, ICommandListener, IDamageable
     {
+        [SerializeField] private SpriteRenderer _sprite;
+        [SerializeField] private GameObject _outline;
+        [SerializeField] private TextMeshPro _generationLabel;
+        
         public event Action OnReturned;
         public BasicPooler Pooler { get; protected set; }
         private GenomeCache _genomeCache;
@@ -137,6 +142,8 @@ namespace CyberEvolution.Entities
             _energyToReproduce = energyToReproduce;
             _attackDamage = attackDamage;
             
+            UpdateView();
+            
             SetPosition(position);
         }
 
@@ -171,6 +178,12 @@ namespace CyberEvolution.Entities
         {
             _gridPosition = position;
             transform. position = new Vector3(_gridPosition.x, _gridPosition.y, 0);
+        }
+
+        private void UpdateView()
+        {
+            _generationLabel.text = _generationId.ToString();
+            _sprite.color = Color.azure;
         }
 
         private void DepleteEnergy(float energyCost)
