@@ -183,7 +183,7 @@ namespace CyberEvolution.Entities
         private void UpdateView()
         {
             _generationLabel.text = _generationId.ToString();
-            _sprite.color = Color.azure;
+            _sprite.color = _genomeCache.GetColor(_generationId);
         }
 
         private void DepleteEnergy(float energyCost)

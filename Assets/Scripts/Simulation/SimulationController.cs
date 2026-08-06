@@ -1,9 +1,11 @@
 ﻿using CyberEvolution.Commands;
+using CyberEvolution.Data.Colors;
 using CyberEvolution.Data.Commands;
 using CyberEvolution.Data.Grid;
 using CyberEvolution.Data.Visuals;
 using CyberEvolution.Grid;
 using CyberEvolution.Pooling;
+using CyberEvolution.Simulation.Colors;
 using CyberEvolution.Simulation.Genomes;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -15,6 +17,7 @@ namespace CyberEvolution.Simulation
         private const string TexturePackPath = "Data/Visuals/TexturePack";
         private const string GridDataPath = "Data/Grid/GridData";
         private const string CommandsDataPath = "Data/Commands/CommandsData";
+        private const string ColorsDataPath = "Data/Colors/ColorsData";
         
         private const int _testGridWidth = 20;
         private const int _testGridHeight = 20;
@@ -25,22 +28,27 @@ namespace CyberEvolution.Simulation
         private TexturePack _texturePack;
         private GridData _gridData;
         private CommandsData _commandsData;
+        private ColorsData _colorsData;
         
         private GridController _gridController;
         private MobsController _mobsController;
         private GenomeCache _genomeCache;
         private CommandsFactory _commandsFactory;
+        private ColorsProviderFactory _colorsProviderFactory;
         private ICommandLogger _commandLogger;
         
-        private float _updateTime = .5f;
         private float _timeSinceLastUpdate;
         private bool _isPaused;
         private bool _isInitialized;
+        
+        //todo: values that should be set from data/ui
+        private float _updateTime = .5f;
         private readonly float _mutationPercent = .2f;
         private int _seed;
         private readonly float _energyToReproduce = 50;
         private readonly float _mobAttackDamage = 50;
         private readonly int _initialPopulation = 5;
+        private IColorProvider _colorProvider;
 
         private void Start()
         {
@@ -67,6 +75,7 @@ namespace CyberEvolution.Simulation
             _texturePack = Resources.Load<TexturePack>(TexturePackPath);
             _gridData = Resources.Load<GridData>(GridDataPath);
             _commandsData = Resources.Load<CommandsData>(CommandsDataPath);
+            _colorsData = Resources.Load<ColorsData>(ColorsDataPath);
         }
 
         private void Setup()
@@ -81,7 +90,9 @@ namespace CyberEvolution.Simulation
         private void CreateSystems()
         {
             _commandLogger = new DebugLogger();
-            _genomeCache = new GenomeCache(_mutationPercent);
+            _colorsProviderFactory = new ColorsProviderFactory(_colorsData);
+            _colorProvider = _colorsProviderFactory.Create();
+            _genomeCache = new GenomeCache(_colorProvider, _mutationPercent);
             _gridController = new GridController(_gridContainer, _gridData, _texturePack);
             _commandsFactory = new CommandsFactory(_commandsData, _commandLogger);
             _mobsController = new MobsController(_pooler, _gridController, _genomeCache, _commandsFactory, _energyToReproduce, _mobAttackDamage);

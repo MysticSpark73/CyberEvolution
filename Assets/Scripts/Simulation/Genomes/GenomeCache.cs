@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using CyberEvolution.Commands;
+using CyberEvolution.Simulation.Colors;
+using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace CyberEvolution.Simulation.Genomes
@@ -9,10 +11,12 @@ namespace CyberEvolution.Simulation.Genomes
         public int CurrentGenerationId { get; private set; }
 
         private Dictionary<int, GenomeBase> Genomes = new ();
+        private readonly IColorProvider _colorProvider;
         private readonly float _mutationPercent;
 
-        public GenomeCache(float mutationPercent)
+        public GenomeCache(IColorProvider colorProvider, float mutationPercent)
         {
+            _colorProvider = colorProvider;
             _mutationPercent = mutationPercent;
             CreateFirstGenome();
         }
@@ -35,7 +39,7 @@ namespace CyberEvolution.Simulation.Genomes
                 GenomeBase genome = Genomes[id];
                 CurrentGenerationId++;
                 mutatedId = CurrentGenerationId;
-                Genomes.Add(CurrentGenerationId, genome.Mutate(CurrentGenerationId));
+                Genomes.Add(CurrentGenerationId, genome.Mutate(CurrentGenerationId, _colorProvider.GetNext()));
                 return true;
             }
 
@@ -45,7 +49,7 @@ namespace CyberEvolution.Simulation.Genomes
         private void CreateFirstGenome()
         {
             CurrentGenerationId = 0;
-            GenomeBase genomeBase = new GenomeBase(CurrentGenerationId, CreateRandomGenome(64));
+            GenomeBase genomeBase = new GenomeBase(CurrentGenerationId, CreateRandomGenome(64), _colorProvider.GetNext());
             Genomes.Add(CurrentGenerationId, genomeBase);
         }
 
@@ -58,6 +62,16 @@ namespace CyberEvolution.Simulation.Genomes
             }
 
             return genome;
+        }
+
+        public Color GetColor(int generationId)
+        {
+            if (Genomes.TryGetValue(generationId, out var genome))
+            {
+                return genome.Color;
+            }
+
+            return Color.white;
         }
     }
 }
