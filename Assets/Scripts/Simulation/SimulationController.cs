@@ -1,6 +1,8 @@
-﻿using CyberEvolution.Commands;
+﻿using System.Collections.Generic;
+using CyberEvolution.Commands;
 using CyberEvolution.Data.Colors;
 using CyberEvolution.Data.Commands;
+using CyberEvolution.Data.Food;
 using CyberEvolution.Data.Grid;
 using CyberEvolution.Data.Visuals;
 using CyberEvolution.Grid;
@@ -18,6 +20,7 @@ namespace CyberEvolution.Simulation
         private const string GridDataPath = "Data/Grid/GridData";
         private const string CommandsDataPath = "Data/Commands/CommandsData";
         private const string ColorsDataPath = "Data/Colors/ColorsData";
+        private const string FoodDataPath = "Data/Food/FoodData";
         
         private const int _testGridWidth = 20;
         private const int _testGridHeight = 20;
@@ -29,13 +32,17 @@ namespace CyberEvolution.Simulation
         private GridData _gridData;
         private CommandsData _commandsData;
         private ColorsData _colorsData;
+        private FoodData _foodData;
         
         private GridController _gridController;
+        private FoodController _foodController;
         private MobsController _mobsController;
         private GenomeCache _genomeCache;
         private CommandsFactory _commandsFactory;
         private ColorsProviderFactory _colorsProviderFactory;
         private ICommandLogger _commandLogger;
+        
+        private List<IUpdatable> _updateables = new ();
         
         private float _timeSinceLastUpdate;
         private bool _isPaused;
@@ -65,8 +72,11 @@ namespace CyberEvolution.Simulation
 
             if (_timeSinceLastUpdate >= _updateTime)
             {
+                foreach (var updatable in _updateables)
+                {
+                    updatable.Update(_timeSinceLastUpdate);
+                }
                 _timeSinceLastUpdate = 0;
-                _mobsController.Update();
             }
         }
 
@@ -76,6 +86,7 @@ namespace CyberEvolution.Simulation
             _gridData = Resources.Load<GridData>(GridDataPath);
             _commandsData = Resources.Load<CommandsData>(CommandsDataPath);
             _colorsData = Resources.Load<ColorsData>(ColorsDataPath);
+            _foodData = Resources.Load<FoodData>(FoodDataPath);
         }
 
         private void Setup()
@@ -95,7 +106,11 @@ namespace CyberEvolution.Simulation
             _genomeCache = new GenomeCache(_colorProvider, _mutationPercent);
             _gridController = new GridController(_gridContainer, _gridData, _texturePack);
             _commandsFactory = new CommandsFactory(_commandsData, _commandLogger);
-            _mobsController = new MobsController(_pooler, _gridController, _genomeCache, _commandsFactory, _energyToReproduce, _mobAttackDamage);
+            _foodController = new FoodController(_pooler, _gridController, _foodData);
+            _mobsController = new MobsController(_foodController, _pooler, _gridController, _genomeCache, _commandsFactory, _energyToReproduce, _mobAttackDamage);
+            
+            _updateables.Add(_foodController);
+            _updateables.Add(_mobsController);
         }
 
         private void SetupBoard()

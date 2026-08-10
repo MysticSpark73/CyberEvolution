@@ -19,6 +19,7 @@ namespace CyberEvolution.Entities
         public BasicPooler Pooler { get; protected set; }
         private GenomeCache _genomeCache;
         private MobsController _mobsController;
+        private FoodController _foodController;
         
         private int _generationId;
         private int _currentCommandPointer;
@@ -86,11 +87,29 @@ namespace CyberEvolution.Entities
 
         public void Consume(FoodType foodType, float energyCost)
         {
-            //todo: getCell
-            //todo: getFoodByType
-            //todo: eatIfPossible
             DepleteEnergy(energyCost);
-            throw new NotImplementedException();
+            
+            Vector2Int targetPosition = _gridPosition + GetForwardDirection();
+            Cell targetCell = _gridController.GetCell(targetPosition);
+
+            if (targetCell == null)
+            {
+                Debug.Log($"[Mob][Consume] cell position {targetPosition} is outside of the grid!");
+                return;
+            }
+
+            Food food = targetCell.Food;
+
+            if (food == null)
+            {
+                Debug.Log("[Mob][Consume] there is no food there :(");
+                return;
+            }
+
+            if (food.Type != foodType) return;
+            
+            RestoreEnergy(_foodController.GetEnergyByType(food.Type));
+            food.Consume();
         }
 
         public void Attack(Vector2Int direction, bool isAggressiveTowardsFriendly, float energyCost)
@@ -110,7 +129,7 @@ namespace CyberEvolution.Entities
 
             if (target == null)
             {
-                Debug.Log($"[Mob][Attack] cell has nothing to attack!");
+                Debug.Log("[Mob][Attack] cell has nothing to attack!");
                 return;
             }
 
@@ -122,12 +141,13 @@ namespace CyberEvolution.Entities
 
         public void TakeDamage(float damage) => DepleteEnergy(damage);
 
-        public void InitializeDependencies(MobsController mobsController, GenomeCache genomeCache,
+        public void InitializeDependencies(MobsController mobsController, FoodController foodController, GenomeCache genomeCache,
             CommandsFactory commandsFactory, GridController gridController)
         {
             if (_areDependenciesInitialized) return;
             
             _mobsController = mobsController;
+            _foodController = foodController;
             _genomeCache = genomeCache;
             _commandsFactory = commandsFactory;
             _gridController = gridController;
@@ -190,6 +210,11 @@ namespace CyberEvolution.Entities
         {
             _energy = Mathf.Max(0, _energy - energyCost);
             if (_energy <= 0) Die();
+        }
+
+        private void RestoreEnergy(float energy)
+        {
+            _energy += energy;
         }
 
         private Vector2Int GetForwardDirection() => Vector2Int.RoundToInt(new Vector2(transform.up.x, transform.up.y));

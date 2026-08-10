@@ -8,8 +8,9 @@ namespace CyberEvolution.Grid
         public Vector2Int GridPosition { get; private set; }
         
         public Mob Mob { get; private set; }
+        public Food Food { get; private set; }
         //can anything be spawned here
-        public bool IsEmpty => !_isWall && Mob == null;
+        public bool IsEmpty => !_isWall && Mob == null && Food == null;
         //can mob walk into here
         public bool IsWalkable => !_isWall && Mob == null;
 
@@ -37,10 +38,28 @@ namespace CyberEvolution.Grid
             Mob.OnReturned += RemoveMob;
         }
 
+        public void SetFood(Food food)
+        {
+            if (food == null) return;
+            
+            Food = food;
+            Food.OnReturned += RemoveFood;
+        }
+
         public void RemoveMob()
         {
+            if (Mob == null) return;
+            
             Mob.OnReturned -= RemoveMob;
             Mob = null;
+        }
+
+        private void RemoveFood()
+        {
+            if (Food == null) return;
+            
+            Food.OnReturned -= RemoveFood;
+            Food = null;
         }
     }
 }
