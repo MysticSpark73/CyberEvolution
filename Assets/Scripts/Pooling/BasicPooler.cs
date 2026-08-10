@@ -101,7 +101,7 @@ namespace CyberEvolution.Pooling
         {
             foreach (var pool in _pools)
             {
-                if (pool.Prefab.GetType() == typeof(T))
+                if (pool.Prefab.TryGetComponent<T>(out _))
                 {
                     return pool;
                 }
