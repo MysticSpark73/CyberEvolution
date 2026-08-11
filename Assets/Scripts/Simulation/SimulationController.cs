@@ -129,6 +129,7 @@ namespace CyberEvolution.Simulation
             //todo: check data for seed options (random/custom)
             // _seed = Application.productName.GetHashCode();
             _seed = DateTime.Now.Millisecond;
+            Debug.Log($"Seed: {_seed}");
             Random.InitState(_seed);
         }
     }
