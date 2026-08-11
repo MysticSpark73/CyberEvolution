@@ -15,12 +15,12 @@ MonoBehaviour:
   PlantData:
     FoodType: 1
     Color: {r: 0, g: 0.5019608, b: 0, a: 1}
-    EnergyValue: 10
+    EnergyValue: 20
     SpawnRate: 6
     InitialAmount: 30
   MeatData:
     FoodType: 0
     Color: {r: 0.98039216, g: 0, b: 0.24705882, a: 1}
-    EnergyValue: 30
+    EnergyValue: 60
     SpawnRate: 18
     InitialAmount: 10
