@@ -30,6 +30,7 @@ namespace CyberEvolution.Entities
         private CommandsFactory _commandsFactory;
         private GridController _gridController;
         private Vector2Int _gridPosition;
+        private SensorData _sensorData;
 
         public void InitializePoolable(BasicPooler pooler)
         {
@@ -40,8 +41,6 @@ namespace CyberEvolution.Entities
         public void OnSpawn()
         {
             gameObject.SetActive(true);
-            //todo: set text to generation ID
-            //todo: get generation color from SO
         }
 
         public void OnReturn()
@@ -53,7 +52,7 @@ namespace CyberEvolution.Entities
 
         public void Move(Vector2Int direction, float energyCost)
         {
-            DepleteEnergy(energyCost);
+            if (!TryDepleteEnergy(energyCost)) return;
             
             Vector2Int targetPosition = _gridPosition + direction;
             Cell targetCell = _gridController.GetCell(targetPosition);
@@ -72,22 +71,22 @@ namespace CyberEvolution.Entities
             _gridController.GetCell(_gridPosition)?.RemoveMob();
             SetPosition(targetPosition);
             targetCell.SetMob(this);
-            
         }
 
         public void MoveForward(float energyCost) => Move(GetForwardDirection(), energyCost);
 
         public void Turn(int degrees, float energyCost)
         {
-            DepleteEnergy(energyCost);
+            if (!TryDepleteEnergy(energyCost)) return;
+ 
             transform.Rotate(Vector3.forward * degrees);
         }
 
-        public void DoNothing(float energyCost) => DepleteEnergy(energyCost);
+        public void DoNothing(float energyCost) => TryDepleteEnergy(energyCost);
 
         public void Consume(FoodType foodType, float energyCost)
         {
-            DepleteEnergy(energyCost);
+            if (!TryDepleteEnergy(energyCost)) return;
             
             Vector2Int targetPosition = _gridPosition + GetForwardDirection();
             Cell targetCell = _gridController.GetCell(targetPosition);
@@ -114,7 +113,7 @@ namespace CyberEvolution.Entities
 
         public void Attack(Vector2Int direction, bool isAggressiveTowardsFriendly, float energyCost)
         {
-            DepleteEnergy(energyCost);
+            if (!TryDepleteEnergy(energyCost)) return;
             
             Vector2Int targetPosition = _gridPosition + direction;
             Cell targetCell = _gridController.GetCell(targetPosition);
@@ -133,13 +132,19 @@ namespace CyberEvolution.Entities
                 return;
             }
 
-            target.TakeDamage(_attackDamage);
+            target.TakeDamage(_attackDamage, _gridPosition);
         }
 
         public void AttackForward(bool isAggressiveTowardsFriendly, float energyCost) =>
             Attack(GetForwardDirection(), isAggressiveTowardsFriendly, energyCost);
 
-        public void TakeDamage(float damage) => DepleteEnergy(damage);
+        public void TakeDamage(float damage, Vector2Int from)
+        {
+            if (!TryDepleteEnergy(damage)) return;
+            
+            _sensorData.WasAttacked = true;
+            _sensorData.AttackDirection = from - _gridPosition;
+        }
 
         public void InitializeDependencies(MobsController mobsController, FoodController foodController, GenomeCache genomeCache,
             CommandsFactory commandsFactory, GridController gridController)
@@ -162,17 +167,23 @@ namespace CyberEvolution.Entities
             _energyToReproduce = energyToReproduce;
             _attackDamage = attackDamage;
             
+            InitializeSensorData();
+
             UpdateView();
             
             SetPosition(position);
         }
 
+        public bool IsFriendly(int generationId) => _generationId == generationId;
+
         public void ExecuteCommand()
         {
-            CommandType commandType = _genomeCache.GetNextCommand(_generationId, ref _currentCommandPointer);
+            UpdateSensorData();
+            CommandType commandType = _genomeCache.GetNextCommand(_generationId, ref _currentCommandPointer, _sensorData);
             var command = _commandsFactory.Create(commandType, this);
             command.Execute();
             TryReproduce();
+            ResetSensorData();
         }
 
         private void TryReproduce()
@@ -187,11 +198,11 @@ namespace CyberEvolution.Entities
                 return;
             }
             
-            DepleteEnergy(_energyToReproduce);
+            TryDepleteEnergy(_energyToReproduce * .5f);
 
             _genomeCache.TryMutateGenome(_generationId, out int mutatedId);
             
-            _mobsController.SpawnMob(targetCell.GridPosition, mutatedId, _energyToReproduce);
+            _mobsController.SpawnMob(targetCell.GridPosition, mutatedId, _energyToReproduce * .5f);
         }
 
         private void SetPosition(Vector2Int position)
@@ -206,10 +217,16 @@ namespace CyberEvolution.Entities
             _sprite.color = _genomeCache.GetColor(_generationId);
         }
 
-        private void DepleteEnergy(float energyCost)
+        private bool TryDepleteEnergy(float energyCost)
         {
             _energy = Mathf.Max(0, _energy - energyCost);
-            if (_energy <= 0) Die();
+            
+            if (_energy <= 0)
+            {
+                Die();
+                return false;
+            }
+            return true;
         }
 
         private void RestoreEnergy(float energy)
@@ -221,7 +238,27 @@ namespace CyberEvolution.Entities
 
         private void Die()
         {
+            Vector2Int gridPosition = _gridPosition;
             Pooler.Return(this);
+            _foodController.OnMobDied(gridPosition);
+        }
+
+        private void InitializeSensorData()
+        {
+            _sensorData.SelfGenerationId = _generationId;
+            _sensorData.WasAttacked = false;
+            _sensorData.AttackDirection = Vector2Int.zero;
+            _sensorData.CellInFront = null;
+        }
+
+        private void UpdateSensorData()
+        {
+            _sensorData.CellInFront = _gridController.GetCell(_gridPosition + GetForwardDirection());
+        }
+
+        private void ResetSensorData()
+        {
+            _sensorData.WasAttacked = false;
         }
     }
 }

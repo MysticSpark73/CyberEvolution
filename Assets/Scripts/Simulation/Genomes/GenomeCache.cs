@@ -21,11 +21,11 @@ namespace CyberEvolution.Simulation.Genomes
             CreateFirstGenome();
         }
 
-        public CommandType GetNextCommand(int id, ref int ptr)
+        public CommandType GetNextCommand(int id, ref int ptr, SensorData sensorData)
         {
             if (Genomes.TryGetValue(id, out var genome))
             {
-                return genome.GetNextCommand(ref ptr);
+                return genome.GetNextCommand(ref ptr, sensorData);
             }
 
             return CommandType.UndefinedCommand;
@@ -34,7 +34,8 @@ namespace CyberEvolution.Simulation.Genomes
         public bool TryMutateGenome(int id, out int mutatedId)
         {
             mutatedId = id;
-            if (Random.Range(0, 100) <= 1 - _mutationPercent)
+            int roll = Random.Range(0, 100);
+            if (roll <= _mutationPercent * 100)
             {
                 GenomeBase genome = Genomes[id];
                 CurrentGenerationId++;
@@ -49,19 +50,39 @@ namespace CyberEvolution.Simulation.Genomes
         private void CreateFirstGenome()
         {
             CurrentGenerationId = 0;
-            GenomeBase genomeBase = new GenomeBase(CurrentGenerationId, CreateRandomGenome(64), _colorProvider.GetNext());
-            Genomes.Add(CurrentGenerationId, genomeBase);
+            ComplexGenome complexGenome = new ComplexGenome(CurrentGenerationId, CreateRandomGenome(6 * (8 + 3)), _colorProvider.GetNext());
+            // ComplexGenome complexGenome = new ComplexGenome(CurrentGenerationId, CreateIdealGenome(), _colorProvider.GetNext());
+            Debug.Log(complexGenome.ToString());
+            Genomes.Add(CurrentGenerationId, complexGenome);
         }
 
         private int[] CreateRandomGenome(int length)
         {
-            int[] genome =  new int[length];
+            int[] genome = new int[length];
             for (int i = 0; i < length; i++)
             {
                 genome[i] = (int) CommandTypeExtension.GetRandomCommand();
             }
-
+            
             return genome;
+        }
+
+        private int[] CreateIdealGenome()
+        {
+            return new[]
+            {
+                0, 0, 4, 5, 1, 6,
+                1, 1, 4, 5, 1, 6,
+                3, 1, 4, 5, 1, 1,
+                2, 2, 4, 5, 2, 2,
+                1, 1, 4, 5, 1, 1,
+                3, 2, 3, 3, 2, 2,
+                3, 1, 4, 5, 1, 1,
+                2, 2, 4, 5, 2, 2,
+                3, 1, 4, 5, 1, 2,
+                3, 2, 4, 5, 2, 1,
+                1, 2, 4, 5, 1, 2
+            };
         }
 
         public Color GetColor(int generationId)

@@ -1,7 +1,9 @@
-﻿namespace CyberEvolution.Entities
+﻿using UnityEngine;
+
+namespace CyberEvolution.Entities
 {
     public interface IDamageable
     {
-        void TakeDamage(float damage);
+        void TakeDamage(float damage, Vector2Int from);
     }
 }

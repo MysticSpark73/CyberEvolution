@@ -17,20 +17,22 @@ namespace CyberEvolution.Simulation.Genomes
             _commands = commands;
         }
 
-        public virtual CommandType GetNextCommand(ref int ptr)
+        public virtual CommandType GetNextCommand(ref int ptr, SensorData sensorData)
         {
             int commandValue = _commands[ptr];
             ptr = ((ptr + 1) % _commands.Length + _commands.Length) % _commands.Length;
             return (CommandType) commandValue;
         }
 
-        public GenomeBase Mutate(int id, Color color)
+        public virtual GenomeBase Mutate(int id, Color color)
         {
             int[] newGenome = new int[_commands.Length];
             _commands.CopyTo(newGenome, 0);
             int replaceIndex = Random.Range(0, _commands.Length);
             _commands[replaceIndex] = (int) CommandTypeExtension.GetRandomCommand((CommandType) _commands[replaceIndex]);
-            return new GenomeBase(id, newGenome, color);
+            return CreateMutatedGenome(id, newGenome, color);
         }
+
+        protected virtual GenomeBase CreateMutatedGenome(int id, int[] commands, Color color) => new(id, commands, color);
     }
 }
