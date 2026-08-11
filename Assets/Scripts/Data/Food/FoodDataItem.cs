@@ -10,7 +10,7 @@ namespace CyberEvolution.Data.Food
         public FoodType FoodType;
         public Color Color;
         public float EnergyValue;
-        public float SpawnRate;
+        public int SpawnRate;
         public int InitialAmount;
     }
 }

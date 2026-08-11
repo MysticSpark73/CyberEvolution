@@ -12,11 +12,11 @@ namespace CyberEvolution.Simulation
         private readonly BasicPooler _pooler;
         private readonly GridController _gridController;
         private readonly FoodData _foodData;
-        private readonly float _plantSpawnRate;
-        private readonly float _meatSpawnRate;
+        private readonly int _plantSpawnRate;
+        private readonly int _meatSpawnRate;
 
-        private float _plantSpawnTimer;
-        private float _meatSpawnTimer;
+        private int _plantSpawnTimer;
+        private int _meatSpawnTimer;
 
         public FoodController(BasicPooler pooler, GridController gridController, FoodData foodData)
         {
@@ -29,8 +29,8 @@ namespace CyberEvolution.Simulation
 
         public void Update(float deltaTime)
         {
-            TrySpawnPlant(deltaTime);
-            TrySpawnMeat(deltaTime);
+            TrySpawnPlant();
+            TrySpawnMeat();
         }
 
         public float GetEnergyByType(FoodType type) => type switch
@@ -65,11 +65,11 @@ namespace CyberEvolution.Simulation
             }
         }
 
-        private void TrySpawnPlant(float deltaTime)
+        private void TrySpawnPlant()
         {
             if (_plantSpawnRate <= 0f) return;
-            
-            _plantSpawnTimer += deltaTime;
+
+            _plantSpawnTimer++;
 
             if (_plantSpawnTimer < _plantSpawnRate) return;
             
@@ -78,11 +78,11 @@ namespace CyberEvolution.Simulation
             SpawnFood(FoodType.Plant, _gridController.GetRandomEmptyCell());
         }
 
-        private void TrySpawnMeat(float deltaTime)
+        private void TrySpawnMeat()
         {
             if (_meatSpawnRate <= 0f) return;
-            
-            _meatSpawnTimer += deltaTime;
+
+            _meatSpawnTimer++;
 
             if (_meatSpawnTimer < _meatSpawnRate) return;
             
