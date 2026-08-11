@@ -18,11 +18,14 @@ namespace CyberEvolution.Simulation
         
         private readonly float _energyToReproduce;
         private readonly float _attackDamage;
+        private readonly float _initialEnergy;
+        private readonly int _initialPopulation;
 
         private List<Mob> _mobs = new();
 
         public MobsController(FoodController foodController, BasicPooler pooler, GridController gridController,
-            GenomeCache genomeCache, CommandsFactory commandsFactory, float energyToReproduce, float attackDamage)
+            GenomeCache genomeCache, CommandsFactory commandsFactory, float energyToReproduce, float attackDamage,
+            int initialPopulation, float initialEnergy)
         {
             _foodController = foodController;
             _pooler = pooler;
@@ -31,6 +34,16 @@ namespace CyberEvolution.Simulation
             _commandsFactory = commandsFactory;
             _energyToReproduce = energyToReproduce;
             _attackDamage = attackDamage;
+            _initialPopulation = initialPopulation;
+            _initialEnergy = initialEnergy;
+        }
+
+        public void CreateInitialPopulation()
+        {
+            for (int i = 0; i < _initialPopulation; i++)
+            {
+                SpawnMob(_gridController.GetRandomEmptyCell().GridPosition, _genomeCache.CurrentGenerationId, _initialEnergy);
+            }
         }
 
         public void SpawnMob(Vector2Int position, int generationId, float energy)

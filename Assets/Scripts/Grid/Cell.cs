@@ -10,24 +10,23 @@ namespace CyberEvolution.Grid
         public Mob Mob { get; private set; }
         public Food Food { get; private set; }
         //can anything be spawned here
-        public bool IsEmpty => !_isWall && Mob == null && Food == null;
+        public bool IsEmpty => !IsWall && Mob == null && Food == null;
         //can mob walk into here
-        public bool IsWalkable => !_isWall && Mob == null;
+        public bool IsWalkable => !IsWall && Mob == null;
+        public bool IsWall { get; private set; }
 
         [SerializeField] private SpriteRenderer _spriteRenderer;
         
         private Sprite _tileSprite;
         private Sprite _wallSprite;
-        private bool _isWall;
-
 
         public void Initialize(Vector2Int position, Sprite tileSprite, Sprite wallSprite, bool initializeAsWall = false)
         {
             GridPosition = position;
             _wallSprite = wallSprite;
             _tileSprite = tileSprite;
-            _isWall = initializeAsWall;
-            _spriteRenderer.sprite = _isWall ? _wallSprite : _tileSprite;
+            IsWall = initializeAsWall;
+            _spriteRenderer.sprite = IsWall ? _wallSprite : _tileSprite;
         }
 
         public void SetMob(Mob mob)

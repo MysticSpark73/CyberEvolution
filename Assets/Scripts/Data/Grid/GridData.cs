@@ -6,7 +6,5 @@ namespace CyberEvolution.Data.Grid
     public class GridData : ScriptableObject
     {
         public GameObject TilePrefab;
-        public GameObject MobPrefab;
-        public GameObject FoodPrefab;
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using CyberEvolution.Commands;
 using CyberEvolution.Data.Colors;
 using CyberEvolution.Data.Commands;
@@ -41,6 +42,7 @@ namespace CyberEvolution.Simulation
         private CommandsFactory _commandsFactory;
         private ColorsProviderFactory _colorsProviderFactory;
         private ICommandLogger _commandLogger;
+        private IColorProvider _colorProvider;
         
         private List<IUpdatable> _updateables = new ();
         
@@ -49,13 +51,13 @@ namespace CyberEvolution.Simulation
         private bool _isInitialized;
         
         //todo: values that should be set from data/ui
-        private float _updateTime = .5f;
-        private readonly float _mutationPercent = .2f;
         private int _seed;
-        private readonly float _energyToReproduce = 50;
-        private readonly float _mobAttackDamage = 50;
-        private readonly int _initialPopulation = 5;
-        private IColorProvider _colorProvider;
+        private float _updateTime = .25f;
+        private readonly float _mutationPercent = .2f;
+        private readonly float _energyToReproduce = 100;
+        private readonly float _initialEnergy = 80;
+        private readonly float _mobAttackDamage = 25;
+        private readonly int _initialPopulation = 10;
 
         private void Start()
         {
@@ -107,7 +109,8 @@ namespace CyberEvolution.Simulation
             _gridController = new GridController(_gridContainer, _gridData, _texturePack);
             _commandsFactory = new CommandsFactory(_commandsData, _commandLogger);
             _foodController = new FoodController(_pooler, _gridController, _foodData);
-            _mobsController = new MobsController(_foodController, _pooler, _gridController, _genomeCache, _commandsFactory, _energyToReproduce, _mobAttackDamage);
+            _mobsController = new MobsController(_foodController, _pooler, _gridController, _genomeCache,
+                _commandsFactory, _energyToReproduce, _mobAttackDamage, _initialPopulation, _initialEnergy);
             
             _updateables.Add(_foodController);
             _updateables.Add(_mobsController);
@@ -117,21 +120,15 @@ namespace CyberEvolution.Simulation
         {
             _pooler.CreatePools(_testGridWidth * _testGridHeight);
             _gridController.CreateGrid(_testGridWidth, _testGridHeight);
-            SpawnMobs();
-        }
-
-        private void SpawnMobs()
-        {
-            for (int i = 0; i < _initialPopulation; i++)
-            {
-                _mobsController.SpawnMob(_gridController.GetRandomEmptyCell().GridPosition, _genomeCache.CurrentGenerationId, _energyToReproduce * .5f);
-            }
+            _foodController.CreateInitialFood();
+            _mobsController.CreateInitialPopulation();
         }
 
         private void SetupSeed()
         {
             //todo: check data for seed options (random/custom)
-            _seed = Application.productName.GetHashCode();
+            // _seed = Application.productName.GetHashCode();
+            _seed = DateTime.Now.Millisecond;
             Random.InitState(_seed);
         }
     }
