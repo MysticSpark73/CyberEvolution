@@ -40,6 +40,31 @@ namespace CyberEvolution.Simulation
             _ => throw new ArgumentOutOfRangeException(),
         };
 
+        public void OnMobDied(Vector2Int position)
+        {
+            Cell cell = _gridController.GetCell(position);
+            if (cell == null || !cell.IsEmpty)
+            {
+                Debug.Log($"[FoodController][OnMobDied] Can't spawn food at {position}");
+                return;
+            }
+            
+            SpawnFood(FoodType.Meat, cell);
+        }
+
+        public void CreateInitialFood()
+        {
+            for (int i = 0; i < _foodData.PlantData.InitialAmount; i++)
+            {
+                SpawnFood(FoodType.Plant, _gridController.GetRandomEmptyCell());
+            }
+
+            for (int i = 0; i < _foodData.MeatData.InitialAmount; i++)
+            {
+                SpawnFood(FoodType.Meat, _gridController.GetRandomEmptyCell());
+            }
+        }
+
         private void TrySpawnPlant(float deltaTime)
         {
             if (_plantSpawnRate <= 0f) return;
@@ -50,7 +75,7 @@ namespace CyberEvolution.Simulation
             
             _plantSpawnTimer -= _plantSpawnRate;
             
-            SpawnFood(FoodType.Plant);
+            SpawnFood(FoodType.Plant, _gridController.GetRandomEmptyCell());
         }
 
         private void TrySpawnMeat(float deltaTime)
@@ -63,12 +88,11 @@ namespace CyberEvolution.Simulation
             
             _meatSpawnTimer -= _meatSpawnRate;
             
-            SpawnFood(FoodType.Meat);
+            SpawnFood(FoodType.Meat, _gridController.GetRandomEmptyCell());
         }
 
-        private void SpawnFood(FoodType type)
+        private void SpawnFood(FoodType type, Cell cell)
         {
-            Cell cell = _gridController.GetRandomEmptyCell();
             FoodDataItem data = _foodData.GetFoodDataByType(type);
             
             if (cell == null)
