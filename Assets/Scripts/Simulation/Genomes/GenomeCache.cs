@@ -50,7 +50,7 @@ namespace CyberEvolution.Simulation.Genomes
         private void CreateFirstGenome()
         {
             CurrentGenerationId = 0;
-            ComplexGenome complexGenome = new ComplexGenome(CurrentGenerationId, CreateRandomGenome(6 * (8 + 3)), _colorProvider.GetNext());
+            ComplexGenome complexGenome = new ComplexGenome(CurrentGenerationId, CreateRandomGenome(6 * (8 + 4)), _colorProvider.GetNext());
             // ComplexGenome complexGenome = new ComplexGenome(CurrentGenerationId, CreateIdealGenome(), _colorProvider.GetNext());
             Debug.Log(complexGenome.ToString());
             Genomes.Add(CurrentGenerationId, complexGenome);
