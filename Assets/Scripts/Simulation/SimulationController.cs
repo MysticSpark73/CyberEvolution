@@ -24,8 +24,8 @@ namespace CyberEvolution.Simulation
         private const string ColorsDataPath = "Data/Colors/ColorsData";
         private const string FoodDataPath = "Data/Food/FoodData";
         
-        private const int _testGridWidth = 20;
-        private const int _testGridHeight = 20;
+        private const int _testGridWidth = 30;
+        private const int _testGridHeight = 30;
         
         [SerializeField] private Transform _gridContainer;
         [SerializeField] private BasicPooler _pooler;
@@ -59,7 +59,7 @@ namespace CyberEvolution.Simulation
         private readonly float _energyToReproduce = 100;
         private readonly float _initialEnergy = 80;
         private readonly float _mobAttackDamage = 25;
-        private readonly int _initialPopulation = 10;
+        private readonly int _initialPopulation = 15;
 
         private void Start()
         {
@@ -108,7 +108,7 @@ namespace CyberEvolution.Simulation
             //todo: check data for seed options (random/custom)
             // _seed = Application.productName.GetHashCode();
             _seed = DateTime.Now.GetHashCode();
-            // _seed = 1168051003;
+            // _seed = 1825567950;
             Debug.Log($"Seed: {_seed}");
             Random.InitState(_seed);
         }
