@@ -409,11 +409,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CyberEvolution.Pooling.BasicPooler
   _pools:
   - Prefab: {fileID: 622369624764202458, guid: 752b496dff349f1409392f71d7f4eb45, type: 3}
-    PoolSize: 10
+    PoolSize: 100
     Container: {fileID: 1696305841}
     UseDynamicPoolSize: 1
   - Prefab: {fileID: 2063424345043945465, guid: f05774234a49ea74d88ae3e115232172, type: 3}
-    PoolSize: 10
+    PoolSize: 150
     Container: {fileID: 558148560}
     UseDynamicPoolSize: 1
 --- !u!4 &1210234928
