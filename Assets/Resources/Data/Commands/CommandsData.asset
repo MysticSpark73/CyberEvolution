@@ -16,11 +16,11 @@ MonoBehaviour:
   - Type: 0
     EnergyCost: 1
   - Type: 1
-    EnergyCost: 2
+    EnergyCost: 1
   - Type: 2
-    EnergyCost: 2
+    EnergyCost: 1
   - Type: 3
-    EnergyCost: 3
+    EnergyCost: 2
   - Type: 4
     EnergyCost: 1
   - Type: 5
