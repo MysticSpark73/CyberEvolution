@@ -13,6 +13,8 @@ namespace CyberEvolution.Entities
     {
         [SerializeField] private SpriteRenderer _sprite;
         [SerializeField] private GameObject _outline;
+        [SerializeField] private GameObject _consumeActionObject;
+        [SerializeField] private GameObject _attackActionObject;
         [SerializeField] private TextMeshPro _generationLabel;
         
         public event Action OnReturned;
@@ -98,6 +100,7 @@ namespace CyberEvolution.Entities
             }
 
             Food food = targetCell.Food;
+            _consumeActionObject.SetActive(true);
 
             if (food == null)
             {
@@ -124,6 +127,7 @@ namespace CyberEvolution.Entities
                 return;
             }
 
+            _attackActionObject.SetActive(true);
             Mob target = targetCell.Mob;
 
             if (target == null)
@@ -131,7 +135,7 @@ namespace CyberEvolution.Entities
                 Debug.Log("[Mob][Attack] cell has nothing to attack!");
                 return;
             }
-
+            
             target.TakeDamage(_attackDamage, _gridPosition);
         }
 
@@ -169,15 +173,18 @@ namespace CyberEvolution.Entities
             
             InitializeSensorData();
 
+            DisableActions();
             UpdateView();
             
             SetPosition(position);
+            transform.rotation = Quaternion.identity;
         }
 
         public bool IsFriendly(int generationId) => _generationId == generationId;
 
         public void ExecuteCommand()
         {
+            DisableActions();
             UpdateSensorData();
             CommandType commandType = _genomeCache.GetNextCommand(_generationId, ref _currentCommandPointer, _sensorData);
             var command = _commandsFactory.Create(commandType, this);
@@ -259,6 +266,12 @@ namespace CyberEvolution.Entities
         private void ResetSensorData()
         {
             _sensorData.WasAttacked = false;
+        }
+
+        private void DisableActions()
+        {
+            _consumeActionObject.SetActive(false);
+            _attackActionObject.SetActive(false);
         }
     }
 }
