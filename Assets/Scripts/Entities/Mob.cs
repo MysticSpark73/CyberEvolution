@@ -197,7 +197,7 @@ namespace CyberEvolution.Entities
         {
             if (_energy < _energyToReproduce) return;
 
-            Cell targetCell = _gridController.GetFirstEmptyCellNearby(_gridPosition);
+            Cell targetCell = _gridController.GetFirstWalkableCellNearby(_gridPosition);
 
             if (targetCell == null)
             {

@@ -73,7 +73,7 @@ namespace CyberEvolution.Grid
                     if (i == 0 && j == 0) continue;
                     x = position.x + i;
                     y = position.y + j;
-                    if (x <0 || x > _gridWidth || y < 0 || y > _gridHeight) continue;
+                    if (IsOutOfBounds(new Vector2Int(x, y))) continue;
                     if (_grid[x, y].IsEmpty) return _grid[x, y];
                 }
             }
@@ -92,13 +92,59 @@ namespace CyberEvolution.Grid
                     if (i == 0 && j == 0) continue;
                     x = position.x + i;
                     y = position.y + j;
-                    if (x < 0 || x > _gridWidth || y < 0 || y > _gridHeight) continue;
+                    if (IsOutOfBounds(new Vector2Int(x, y))) continue;
                     if (_grid[x, y].IsEmpty) emptyCells.Add(_grid[x, y]);
                 }
             }
 
             if (emptyCells.Count == 0) return null;
             return emptyCells[Random.Range(0, emptyCells.Count)];
+        }
+
+        public Cell GetFirstWalkableCellNearby(Vector2Int position)
+        {
+            int x, y;
+            for (int i = -1; i < 1; i++)
+            {
+                for (int j = -1; j < 1; j++)
+                {
+                    if (i == 0 && j == 0) continue;
+                    x = position.x + i;
+                    y = position.y + j;
+                    if (IsOutOfBounds(new Vector2Int(x, y))) continue;
+                    if (_grid[x, y].IsWalkable) return _grid[x, y];
+                }
+            }
+
+            return null;
+        }
+
+        public Cell GetRandomWalkableCellNearby(Vector2Int position)
+        {
+            int x, y;
+            List<Cell> walkableCells = new();
+            for (int i = -1; i < 1; i++)
+            {
+                for (int j = -1; j < 1; j++)
+                {
+                    if (i == 0 && j == 0) continue;
+                    x = position.x + i;
+                    y = position.y + j;
+                    if (IsOutOfBounds(new Vector2Int(x, y))) continue;
+                    if (_grid[x, y].IsWalkable)
+                    {
+                        walkableCells.Add(_grid[x, y]);
+                    }
+                }
+            }
+
+            if (walkableCells.Count == 0) return null;
+            return walkableCells[Random.Range(0, walkableCells.Count)];
+        }
+
+        private bool IsOutOfBounds(Vector2Int position)
+        {
+            return position.x < 0 || position.x > _gridWidth || position.y < 0 || position.y > _gridHeight;
         }
 
         public Cell GetCell(Vector2Int position)
