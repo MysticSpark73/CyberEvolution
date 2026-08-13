@@ -8,7 +8,7 @@ namespace CyberEvolution.Commands
         private Stack<CommandBase> _stack = new Stack<CommandBase>();
         public void Log(CommandBase command, string message)
         {
-            Debug.Log($"[DebugLogger] {message}");
+            // Debug.Log($"[DebugLogger] {message}");
         }
     }
 }
