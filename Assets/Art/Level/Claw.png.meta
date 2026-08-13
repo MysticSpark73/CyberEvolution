@@ -3,14 +3,14 @@ guid: 478dabf3ee73af44e9a45d7392b843fe
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -2460357637579440830
-    second: "\u041C\u0410\u041A\u04211-01_0"
+      213: -7410066023671653019
+    second: Claw_0
   - first:
-      213: 8288614073515777361
-    second: "\u041C\u0410\u041A\u04211-01_1"
+      213: -1311602187163818665
+    second: Claw_1
   - first:
-      213: -183054218131925612
-    second: "\u041C\u0410\u041A\u04211-01_2"
+      213: 3722726833728493705
+    second: Claw_2
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -57,7 +57,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 727
+  spritePixelsToUnits: 256
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -78,7 +78,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 1024
+    maxTextureSize: 256
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -119,13 +119,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: "\u041C\u0410\u041A\u04211-01_0"
+      name: Claw_0
       rect:
         serializedVersion: 2
-        x: 45
-        y: 9
-        width: 339
-        height: 620
+        x: 15
+        y: 2
+        width: 121
+        height: 221
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -134,20 +134,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 24d78af93cd0bddd0800000000000000
-      internalID: -2460357637579440830
+      spriteID: 56d1cd036382a2990800000000000000
+      internalID: -7410066023671653019
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: "\u041C\u0410\u041A\u04211-01_1"
+      name: Claw_1
       rect:
         serializedVersion: 2
-        x: 188
-        y: 108
-        width: 315
-        height: 517
+        x: 65
+        y: 37
+        width: 114
+        height: 184
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -156,20 +156,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 15d163cb592170370800000000000000
-      internalID: 8288614073515777361
+      spriteID: 755a97b82c04ccde0800000000000000
+      internalID: -1311602187163818665
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: "\u041C\u0410\u041A\u04211-01_2"
+      name: Claw_2
       rect:
         serializedVersion: 2
-        x: 272
-        y: 94
-        width: 378
-        height: 611
+        x: 95
+        y: 32
+        width: 135
+        height: 217
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -178,8 +178,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 4951c919829a57df0800000000000000
-      internalID: -183054218131925612
+      spriteID: 9889338d458c9a330800000000000000
+      internalID: 3722726833728493705
       vertices: []
       indices: 
       edges: []
@@ -198,9 +198,9 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      "\u041C\u0410\u041A\u04211-01_0": -2460357637579440830
-      "\u041C\u0410\u041A\u04211-01_1": 8288614073515777361
-      "\u041C\u0410\u041A\u04211-01_2": -183054218131925612
+      Claw_0: -7410066023671653019
+      Claw_1: -1311602187163818665
+      Claw_2: 3722726833728493705
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

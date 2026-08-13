@@ -3,8 +3,8 @@ guid: ce7687ee9d1587a49b6eaab4842e37a1
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 4089417388661488379
-    second: "\u041C\u0410\u041A\u04211-02_0"
+      213: 4421805866866354697
+    second: Speedline_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -51,7 +51,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 727
+  spritePixelsToUnits: 256
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -72,7 +72,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 1024
+    maxTextureSize: 256
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: "\u041C\u0410\u041A\u04211-02_0"
+      name: Speedline_0
       rect:
         serializedVersion: 2
-        x: 20
-        y: 20
-        width: 632
-        height: 667
+        x: 6
+        y: 6
+        width: 225
+        height: 237
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: bfa3975c27780c830800000000000000
-      internalID: 4089417388661488379
+      spriteID: 90aae4812096d5d30800000000000000
+      internalID: 4421805866866354697
       vertices: []
       indices: 
       edges: []
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      "\u041C\u0410\u041A\u04211-02_0": 4089417388661488379
+      Speedline_0: 4421805866866354697
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
