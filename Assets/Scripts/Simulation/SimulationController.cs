@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using CyberEvolution.Commands;
+using CyberEvolution.Controls.Camera;
 using CyberEvolution.Data.Colors;
 using CyberEvolution.Data.Commands;
 using CyberEvolution.Data.Food;
@@ -28,6 +29,7 @@ namespace CyberEvolution.Simulation
         
         [SerializeField] private Transform _gridContainer;
         [SerializeField] private BasicPooler _pooler;
+        [SerializeField] private CameraController _cameraController;
         
         private TexturePack _texturePack;
         private GridData _gridData;
@@ -95,9 +97,20 @@ namespace CyberEvolution.Simulation
         {
             SetupSeed();
             CreateSystems();
+            SetupCamera();
             SetupBoard();
 
             _isInitialized = true;
+        }
+
+        private void SetupSeed()
+        {
+            //todo: check data for seed options (random/custom)
+            // _seed = Application.productName.GetHashCode();
+            _seed = DateTime.Now.GetHashCode();
+            // _seed = 1168051003;
+            Debug.Log($"Seed: {_seed}");
+            Random.InitState(_seed);
         }
 
         private void CreateSystems()
@@ -116,22 +129,18 @@ namespace CyberEvolution.Simulation
             _updateables.Add(_mobsController);
         }
 
+        private void SetupCamera()
+        {
+            _cameraController.SetPosition(new Vector2(_testGridWidth * .5f - 0.5f, _testGridHeight * .5f - 0.5f));
+            _cameraController.SetOrthographicSize((_testGridWidth + _testGridHeight) * .25f - 0.5f);
+        }
+
         private void SetupBoard()
         {
             _pooler.CreatePools(_testGridWidth * _testGridHeight);
             _gridController.CreateGrid(_testGridWidth, _testGridHeight);
             _foodController.CreateInitialFood();
             _mobsController.CreateInitialPopulation();
-        }
-
-        private void SetupSeed()
-        {
-            //todo: check data for seed options (random/custom)
-            // _seed = Application.productName.GetHashCode();
-            _seed = DateTime.Now.GetHashCode();
-            // _seed = 1168051003;
-            Debug.Log($"Seed: {_seed}");
-            Random.InitState(_seed);
         }
     }
 }
