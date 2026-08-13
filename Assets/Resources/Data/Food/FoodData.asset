@@ -16,11 +16,11 @@ MonoBehaviour:
     FoodType: 1
     Color: {r: 0, g: 0.5019608, b: 0, a: 1}
     EnergyValue: 20
-    SpawnRate: 3
-    InitialAmount: 30
+    SpawnRate: 2
+    InitialAmount: 90
   MeatData:
     FoodType: 0
     Color: {r: 0.98039216, g: 0, b: 0.24705882, a: 1}
     EnergyValue: 60
-    SpawnRate: 9
-    InitialAmount: 10
+    SpawnRate: 6
+    InitialAmount: 30
