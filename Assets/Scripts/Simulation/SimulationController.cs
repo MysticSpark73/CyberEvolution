@@ -128,7 +128,8 @@ namespace CyberEvolution.Simulation
         {
             //todo: check data for seed options (random/custom)
             // _seed = Application.productName.GetHashCode();
-            _seed = DateTime.Now.Millisecond;
+            _seed = DateTime.Now.GetHashCode();
+            // _seed = 1168051003;
             Debug.Log($"Seed: {_seed}");
             Random.InitState(_seed);
         }
